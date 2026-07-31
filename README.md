@@ -45,3 +45,6 @@ L'agent `investigador_web` té una eina real (`cerca_web`, via DuckDuckGo/`ddgs`
 uv pip install ddgs
 TEMA="el teu tema" python example4/app.py
 ```
+
+### example5 — Process.hierarchical (manager natiu)
+Tres agents (`xarxes`, `permisos`, `redactor`) i tres tasques **sense `agent=` fix**. Amb `Process.hierarchical` + `manager_llm`, CrewAI afegeix un manager intern que decideix ell mateix a qui delegar cada tasca i en quin ordre. Contrasta amb example2: allà la delegació la programa una tool manual; aquí és nativa del framework.
