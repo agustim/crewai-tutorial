@@ -15,6 +15,7 @@ llm_local = LLM(
     base_url=os.getenv("OPENAI_BASE"),
     api_key=os.getenv("OPENAI_APIKEY"),
     temperature=0.2,
+    default_headers={"User-Agent": "curl/8.0"},
 )
 
 # CrewAI necessita un model d'embeddings per a la memòria (short-term/entity).

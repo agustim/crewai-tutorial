@@ -7,11 +7,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configurar el LLM local amb la classe nativa de CrewAI
+# El proxy (Cloudflare) bloqueja el User-Agent per defecte del SDK d'OpenAI
+# ("OpenAI/Python ...") amb un 403 "Your request was blocked", per això cal
+# forçar-ne un altre.
 llm_local = LLM(
     model=os.getenv("MODEL"),
     base_url=os.getenv("OPENAI_BASE"),
     api_key=os.getenv("OPENAI_APIKEY"),
     temperature=0.2,
+    default_headers={"User-Agent": "curl/8.0"},
 )
 
 
@@ -41,10 +45,11 @@ investigador_web = Agent(
     verbose=True,
 )
 
-redactor = Agent(
-    role="Redactor Tècnic",
-    goal="Convertir troballes d'investigació en un resum clar i ben citat.",
-    backstory="Ets un escriptor especialitzat a explicar conceptes complexos de forma senzilla, sempre citant les fonts.",
+
+guionista = Agent(
+    role="Guionista Tècnic-Humoristic",
+    goal="Convertir troballes d'investigació en un monòleg radiofonic amb punts d'humor per una audiencia heterogenia.",
+    backstory="Ets un guionista especialitzat a explicar conceptes complexos de forma senzilla i tocs d'humor, sempre citant les fonts.",
     llm=llm_local,
     verbose=True,
 )
@@ -52,22 +57,22 @@ redactor = Agent(
 tasca_investigacio = Task(
     description=(
         "Cerca a internet informació actual sobre '{tema}'. "
-        "Fes servir la teva eina de cerca abans de treure conclusions."
+        "Fes servir la teva eina de cerca abans de treure conclusions. No facis servir més de 6 vegades l'eina de cerca."
     ),
     expected_output="Una llista de 3-5 fets rellevants, cadascun amb la URL font.",
     agent=investigador_web,
 )
 
-tasca_redaccio = Task(
-    description="Escriu un resum de 3 paràgrafs sobre '{tema}' a partir dels fets trobats, citant les fonts.",
+tasca_guionista = Task(
+    description="Escriu un monòleg radiofonic sobre '{tema}' a partir dels fets trobats, citant les fonts.",
     expected_output="Un resum en format Markdown amb els enllaços font citats.",
-    agent=redactor,
-    context=[tasca_investigacio],
+    agent=guionista,
+    context=[tasca_investigacio], 
 )
 
 equip = Crew(
-    agents=[investigador_web, redactor],
-    tasks=[tasca_investigacio, tasca_redaccio],
+    agents=[investigador_web, guionista],
+    tasks=[tasca_investigacio, tasca_guionista],
     process=Process.sequential,
     verbose=True,
 )

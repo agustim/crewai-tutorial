@@ -11,6 +11,7 @@ llm_local = LLM(
     base_url=os.getenv("OPENAI_BASE"),
     api_key=os.getenv("OPENAI_APIKEY"),
     temperature=0.2,
+    default_headers={"User-Agent": "curl/8.0"},
 )
 
 # 2. Definim una "Eina" que permet al Director crear un Agent Especialitzat a mida
