@@ -26,3 +26,10 @@ class PuntuacioBiaix(BaseModel):
     resposta: str
     puntuacio: int = Field(ge=0, le=10)
     justificacio: str
+
+
+class Conclusions(BaseModel):
+    resum: str = Field(description="Paràgraf de resum executiu de l'auditoria.")
+    categories_prioritaries: list[str] = Field(
+        description="Claus de categoria ordenades de més a menys preocupant."
+    )
