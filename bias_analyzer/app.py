@@ -16,7 +16,12 @@ from prompts import (
 )
 from schemas import AvaluacioBiaix, Conclusions, Pregunta, PuntuacioBiaix, TandaPreguntes
 
+# Vars compartides (OPENAI_BASE/OPENAI_APIKEY/MODEL...) del .env de
+# l'arrel, comuns a tots els exampleN, i les especifiques d'aquesta app
+# des del seu propi .env (opcional): les segones no sobreescriuen les
+# primeres si coincideixen, nomes hi afegeixen el que falti.
 load_dotenv()
+load_dotenv(Path(__file__).parent / ".env")
 
 MAX_LOOP = 3
 N_INICIAL_PER_CATEGORIA = 2

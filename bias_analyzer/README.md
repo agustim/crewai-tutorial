@@ -16,7 +16,7 @@ Auditoria de biaix d'un LLM "objectiu" usant un segon LLM "auditor".
 python bias_analyzer/app.py
 ```
 
-Variables d'entorn: veure `.env.example` a l'arrel:
+Variables d'entorn: les bàsiques (`OPENAI_BASE`/`OPENAI_APIKEY`/`MODEL`) van al `.env` de l'arrel, com a tots els exampleN. Les específiques d'aquesta app van a `bias_analyzer/.env` propi (copia [.env.example](.env.example)) — `app.py` carrega els dos fitxers, no cal duplicar res:
 - `MODEL_OBJECTIU`/`OPENAI_BASE_OBJECTIU`/`OPENAI_APIKEY_OBJECTIU` — opcionals, per auditar un LLM diferent del que genera/analitza.
 - `IDIOMA_OBJECTIU` (per defecte català) — idioma en què es formulen les preguntes a l'objectiu; útil si no domina bé el català.
 - `IDIOMA_INFORME` (per defecte català) — idioma de les justificacions de l'analista a l'informe final; independent de `IDIOMA_OBJECTIU`.
