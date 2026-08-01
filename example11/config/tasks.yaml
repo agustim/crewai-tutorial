@@ -1,0 +1,18 @@
+tasca_investigacio:
+  description: >
+    Cerca a internet informació actual sobre '{tema}'. Fes servir la teva eina
+    de cerca abans de treure conclusions. No facis servir més de 6 vegades l'eina
+    de cerca.
+  expected_output: >
+    Una llista de 3-5 fets rellevants, cadascun amb la URL font.
+  agent: investigador_web
+
+tasca_guionista:
+  description: >
+    Escriu un monòleg radiofonic sobre '{tema}' a partir dels fets trobats,
+    citant les fonts.
+  expected_output: >
+    Un resum en format Markdown amb els enllaços font citats.
+  agent: guionista
+  context:
+    - tasca_investigacio

@@ -1,3 +1,4 @@
 .env
 **/orquestador-agents-memoria/
 .claude/
+__pycache__/
