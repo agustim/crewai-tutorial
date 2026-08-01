@@ -51,3 +51,10 @@ Tres agents (`xarxes`, `permisos`, `redactor`) i tres tasques **sense `agent=` f
 
 ### example6 — Output estructurat (Pydantic)
 Una `Task` amb `output_pydantic=InformeRisc` força l'LLM a retornar JSON vàlid segons un schema Pydantic (`nivell`, `riscos`, `recomanacions`) enlloc de text lliure. `resultat.pydantic` dona directament l'objecte tipat, sense parsejar text a mà. Útil quan el resultat d'un Crew ha d'alimentar altre codi.
+
+### example7 — Human-in-the-loop
+Una `Task` amb `human_input=True`: en acabar, CrewAI pregunta per terminal si el resultat és correcte. Si es dona feedback enlloc de confirmar, l'agent repeteix la tasca incorporant-lo, fins que s'aprova. Requereix terminal interactiu.
+
+```
+python example7/app.py
+```
