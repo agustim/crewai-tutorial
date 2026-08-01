@@ -58,3 +58,6 @@ Una `Task` amb `human_input=True`: en acabar, CrewAI pregunta per terminal si el
 ```
 python example7/app.py
 ```
+
+### example8 — CrewAI Flow (orquestració per events/estat)
+Diferent de Crew+Process (ex1-7): `Flow` encadena mètodes per events amb `@start`/`@router`/`@listen` sobre un estat tipat (Pydantic). `triar_urgencia` fa servir un mini-Crew per classificar una incidència i `@router` bifurca cap a `gestionar_urgent` o `gestionar_normal` segons el resultat, en lloc de seguir sempre la mateixa seqüència fixa.
