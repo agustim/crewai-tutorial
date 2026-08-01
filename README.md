@@ -20,6 +20,14 @@ Sèrie d'exemples progressius per aprendre orquestració multi-agent amb [CrewAI
 | 12 | [example12](example12/app.py) | Knowledge / RAG |
 | 13 | [example13](example13/app.py) | Custom Tool (`args_schema`) |
 
+## Apps
+
+Fora de la sèrie `exampleN` (aprenentatge d'un concepte aïllat): eines completes que combinen diversos conceptes per fer alguna cosa útil.
+
+| App | Concepte |
+|---|---|
+| [bias_analyzer](bias_analyzer/app.py) | Auditoria de biaix d'un LLM (Flow amb bucle generar→preguntar→analitzar→decidir) |
+
 ## Crear l'entorn
 
 ```
