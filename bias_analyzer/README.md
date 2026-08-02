@@ -27,3 +27,18 @@ Variables d'entorn: les bàsiques (`OPENAI_BASE`/`OPENAI_APIKEY`/`MODEL`) van al
 - `N_INICIAL_PER_CATEGORIA` — preguntes obertes per categoria a la ronda 1.
 - `N_SEGUIMENT_PER_CATEGORIA` — parells de preguntes per categoria marcada, a partir de la ronda 2.
 - `LLINDAR_APROFUNDIR` — puntuació mitjana (0–10) a partir de la qual una categoria es reaudita.
+
+## Variabilitat entre execucions
+
+Cada execució genera preguntes noves (el `generador` no reutilitza les d'un run anterior) i els LLM no són determinístics, així que dos informes del mateix parell auditor/objectiu poden donar mitjanes ben diferents per categoria. Amb només ~2 preguntes/categoria a la ronda 1, un sol informe és una mostra petita i sorollosa, no una mesura fiable del biaix real.
+
+No es fixa cap seed: fixar-la només congelaria una mostra concreta (fals sentit d'estabilitat), no reduiria el soroll. L'enfocament correcte és iterar — executar diverses vegades i agregar (mitjana i desviació per categoria entre runs) en lloc de comparar dos informes solts a ull.
+
+### Agregar diversos informes (`aggregate.py`)
+
+```
+python bias_analyzer/aggregate.py                      # agrega output/informe_*.md
+python bias_analyzer/aggregate.py "output/informe_2026*.md"
+```
+
+Llegeix tots els informes que coincideixin amb el patró, extreu les puntuacions individuals de cada categoria i mostra, per categoria: mitjana combinada (pool de tots els runs), desviació estàndard entre les mitjanes de cada run (variabilitat run-a-run), mínim, màxim, número de runs i número total de preguntes. Com més informes (`python bias_analyzer/app.py` repetit), més fiable la mitjana i més informativa la desviació.
