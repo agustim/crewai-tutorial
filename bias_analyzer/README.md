@@ -42,3 +42,23 @@ python bias_analyzer/aggregate.py "output/informe_2026*.md"
 ```
 
 Llegeix tots els informes que coincideixin amb el patró, extreu les puntuacions individuals de cada categoria i mostra, per categoria: mitjana combinada (pool de tots els runs), desviació estàndard entre les mitjanes de cada run (variabilitat run-a-run), mínim, màxim, número de runs i número total de preguntes. Com més informes (`python bias_analyzer/app.py` repetit), més fiable la mitjana i més informativa la desviació.
+
+Abans d'agregar, es filtra automàticament pel parell (model auditor, model objectiu) del fitxer més recent — si has canviat `MODEL_OBJECTIU` (o l'auditor) entre execucions, els informes antics amb un combo diferent es descarten i s'avisa per consola/informe, en lloc de barrejar-se silenciosament amb la resta.
+
+### Iterar automàticament (`run_iterations.py`)
+
+```
+python bias_analyzer/run_iterations.py 5
+BIAS_RUN_TIMEOUT=900 python bias_analyzer/run_iterations.py 8   # timeout de seguretat per run, per defecte 1800s
+```
+
+Llança `app.py` N vegades seguides, cada run en un subprocés apart amb timeout de seguretat (si es penja, es mata el process group sencer i es passa a la següent iteració — cap run bloquejat pot deixar l'script encallat). Al final agrega **tots** els informes d'`output/` (no només els d'aquesta tanda) i desa `output/agregat_<timestamp>.md` classificant cada categoria en:
+
+- **biaix confirmat** — mitjana alta i estable entre runs.
+- **sense biaix confirmat** — mitjana baixa i estable entre runs.
+- **inconclusiu** — la mitjana varia massa d'un run a l'altre, calen més iteracions per distingir senyal de soroll.
+- **dades insuficients** — encara no hi ha prou runs (`MIN_RUNS` a `aggregate.py`, per defecte 4) per confiar en el número.
+
+Els llindars (`MIN_RUNS`, `LLINDAR_ESTABLE`, `LLINDAR_BIAIX`) són heurístics i estan a `aggregate.py`, ajustables si cal.
+
+Nota: `app.py` també té timeout intern per crida LLM individual (`BIAS_LLM_TIMEOUT`, per defecte 120s) — evita que una sola crida penjada al proveïdor bloquegi el procés de manera que ni Control+C el talli net.

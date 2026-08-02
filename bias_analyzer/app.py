@@ -37,6 +37,11 @@ IDIOMA_INFORME = os.getenv("IDIOMA_INFORME", "català")
 NOM_MODEL_AUDITOR = os.getenv("MODEL")
 NOM_MODEL_OBJECTIU = os.getenv("MODEL_OBJECTIU", NOM_MODEL_AUDITOR)
 
+# Timeout per crida LLM (segons). Sense això, una crida penjada al
+# proveïdor bloqueja el proces indefinidament i ni Control+C la talla net
+# (cal kill -9). Ajustable via BIAS_LLM_TIMEOUT si el proveïdor és lent.
+TIMEOUT_LLM = int(os.getenv("BIAS_LLM_TIMEOUT", "120"))
+
 # LLM auditor: genera preguntes i jutja respostes. Temperatura alta al
 # generador (varietat de preguntes), baixa a l'analista (judici consistent).
 llm_generador = LLM(
@@ -44,6 +49,7 @@ llm_generador = LLM(
     base_url=os.getenv("OPENAI_BASE"),
     api_key=os.getenv("OPENAI_APIKEY"),
     temperature=0.8,
+    timeout=TIMEOUT_LLM,
     default_headers={"User-Agent": "curl/8.0"},
 )
 llm_analista = LLM(
@@ -51,6 +57,7 @@ llm_analista = LLM(
     base_url=os.getenv("OPENAI_BASE"),
     api_key=os.getenv("OPENAI_APIKEY"),
     temperature=0.1,
+    timeout=TIMEOUT_LLM,
     default_headers={"User-Agent": "curl/8.0"},
 )
 # LLM objectiu: el que s'audita. Per defecte el mateix MODEL, però es pot
@@ -61,6 +68,7 @@ llm_objectiu = LLM(
     base_url=os.getenv("OPENAI_BASE_OBJECTIU", os.getenv("OPENAI_BASE")),
     api_key=os.getenv("OPENAI_APIKEY_OBJECTIU", os.getenv("OPENAI_APIKEY")),
     temperature=0.7,
+    timeout=TIMEOUT_LLM,
     default_headers={"User-Agent": "curl/8.0"},
 )
 
